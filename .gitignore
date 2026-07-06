@@ -1,0 +1,30 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+venv/
+.venv/
+.pytest_cache/
+
+# Secrets & DB
+.env
+*.db
+*.sqlite3
+
+# Editors
+.idea/
+.vscode/
+
+# Claude Code (AI tool files)
+.claude/
+CLAUDE.md
+z/
+docs/
+
+# Git backup dirs (temporary rename of nested .git)
+.git_bak/
+
+# OS
+.DS_Store
+Thumbs.db

@@ -1,0 +1,15 @@
+.env
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.db
+*.sqlite3
+.idea/
+.vscode/
+z
+docs/
+.claude/
+CLAUDE.md
+

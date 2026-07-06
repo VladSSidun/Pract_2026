@@ -1,0 +1,15 @@
+fastapi>=0.111
+uvicorn[standard]
+aiofiles
+sqlalchemy>=2.0
+aiosqlite
+pydantic
+pydantic-settings
+pydantic[email]
+python-jose[cryptography]
+passlib[bcrypt]
+bcrypt<4.0
+python-multipart
+pytest
+pytest-asyncio
+httpx

@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Schedule Admin — Система управління розкладом</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ===== AUTH SCREEN ===== -->
+  <div id="auth-screen">
+    <div class="auth-card">
+      <div class="auth-logo">
+        <span class="auth-logo-icon">&#128197;</span>
+        <h1>Schedule Admin</h1>
+        <p>Система управління розкладом занять ЗВО</p>
+      </div>
+      <div class="auth-tabs">
+        <button class="auth-tab active" data-tab="login">Вхід</button>
+        <button class="auth-tab" data-tab="register">Реєстрація</button>
+      </div>
+
+      <form id="login-form" class="auth-form">
+        <div class="form-group">
+          <label for="login-username">Логін</label>
+          <input type="text" id="login-username" placeholder="username" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="login-password">Пароль</label>
+          <input type="password" id="login-password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autocomplete="current-password" required>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Увійти</button>
+      </form>
+
+      <form id="register-form" class="auth-form" hidden>
+        <div class="form-group">
+          <label for="reg-username">Логін</label>
+          <input type="text" id="reg-username" placeholder="username" autocomplete="username" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-email">Email</label>
+          <input type="email" id="reg-email" placeholder="user@example.com" autocomplete="email" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-password">Пароль</label>
+          <input type="password" id="reg-password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" autocomplete="new-password" required>
+        </div>
+        <div class="form-group">
+          <label for="reg-role">Роль</label>
+          <select id="reg-role">
+            <option value="student">Студент</option>
+            <option value="admin">Адміністратор</option>
+          </select>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Зареєструватись</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ===== APP SCREEN ===== -->
+  <div id="app-screen" hidden>
+
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <span>&#128197;</span>
+        <span class="sidebar-logo-text">Schedule Admin</span>
+      </div>
+
+      <div class="user-panel" id="user-panel">
+        <!-- filled by JS -->
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="#" class="nav-item" data-section="schedule">
+          <span class="nav-icon">&#128197;</span> Розклад
+        </a>
+        <a href="#" class="nav-item" data-section="groups">
+          <span class="nav-icon">&#128101;</span> Групи
+        </a>
+        <a href="#" class="nav-item" data-section="subjects">
+          <span class="nav-icon">&#128218;</span> Предмети
+        </a>
+        <a href="#" class="nav-item" data-section="teachers">
+          <span class="nav-icon">&#127891;</span> Викладачі
+        </a>
+        <a href="#" class="nav-item admin-only hidden" data-section="admin">
+          <span class="nav-icon">&#9881;</span> Адмін-панель
+        </a>
+      </nav>
+
+      <button id="logout-btn" class="btn-logout">Вийти</button>
+    </aside>
+
+    <main class="main-content">
+
+      <!-- SCHEDULE SECTION -->
+      <section id="section-schedule" class="section">
+        <div class="section-header">
+          <h2>Розклад занять</h2>
+          <button class="btn btn-primary admin-only hidden" id="add-schedule-btn">+ Додати запис</button>
+        </div>
+        <div class="filter-bar">
+          <div class="filter-group">
+            <label>Група</label>
+            <select id="filter-group">
+              <option value="">Всі групи</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>Викладач</label>
+            <select id="filter-teacher">
+              <option value="">Всі викладачі</option>
+            </select>
+          </div>
+          <div class="filter-group">
+            <label>День тижня</label>
+            <select id="filter-day">
+              <option value="">Всі дні</option>
+              <option value="1">Понеділок</option>
+              <option value="2">Вівторок</option>
+              <option value="3">Середа</option>
+              <option value="4">Четвер</option>
+              <option value="5">П'ятниця</option>
+              <option value="6">Субота</option>
+              <option value="7">Неділя</option>
+            </select>
+          </div>
+          <button class="btn btn-secondary" id="reset-filters-btn">Скинути</button>
+        </div>
+        <div id="schedule-list" class="table-container">
+          <div class="loading">Завантаження...</div>
+        </div>
+      </section>
+
+      <!-- GROUPS SECTION -->
+      <section id="section-groups" class="section">
+        <div class="section-header">
+          <h2>Групи</h2>
+          <button class="btn btn-primary admin-only hidden" id="add-group-btn">+ Додати групу</button>
+        </div>
+        <div id="groups-list" class="table-container">
+          <div class="loading">Завантаження...</div>
+        </div>
+      </section>
+
+      <!-- SUBJECTS SECTION -->
+      <section id="section-subjects" class="section">
+        <div class="section-header">
+          <h2>Предмети</h2>
+          <button class="btn btn-primary admin-only hidden" id="add-subject-btn">+ Додати предмет</button>
+        </div>
+        <div id="subjects-list" class="table-container">
+          <div class="loading">Завантаження...</div>
+        </div>
+      </section>
+
+      <!-- TEACHERS SECTION -->
+      <section id="section-teachers" class="section">
+        <div class="section-header">
+          <h2>Викладачі</h2>
+          <button class="btn btn-primary admin-only hidden" id="add-teacher-btn">+ Додати викладача</button>
+        </div>
+        <div id="teachers-list" class="table-container">
+          <div class="loading">Завантаження...</div>
+        </div>
+      </section>
+
+      <!-- ADMIN SECTION -->
+      <section id="section-admin" class="section">
+        <div class="section-header">
+          <h2>Адмін-панель</h2>
+        </div>
+        <div class="admin-cards">
+          <div class="admin-card">
+            <h3>&#127981; Тестові дані</h3>
+            <p>Генерує набір тестових груп, предметів, викладачів та записів розкладу. Якщо в базі вже є дані — повторний виклик нічого не змінить.</p>
+            <button class="btn btn-warning" id="seed-btn">Згенерувати seed-дані</button>
+            <div id="seed-result" class="seed-result"></div>
+          </div>
+          <div class="admin-card">
+            <h3>&#128100; Профіль</h3>
+            <div id="admin-profile"></div>
+          </div>
+          <div class="admin-card admin-card-wide">
+            <h3>&#128203; Таблиця ендпоінтів API</h3>
+            <table class="api-table">
+              <thead>
+                <tr><th>Метод</th><th>Шлях</th><th>Доступ</th><th>Опис</th></tr>
+              </thead>
+              <tbody>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/auth/register</td><td>Public</td><td>Реєстрація користувача</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/auth/login</td><td>Public</td><td>Логін, видача JWT</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/auth/me</td><td>Auth</td><td>Профіль поточного користувача</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/groups/</td><td>Public</td><td>Список груп</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/groups/{id}</td><td>Public</td><td>Одна група</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/groups/</td><td>Admin</td><td>Створення групи</td></tr>
+                <tr><td><span class="method put">PUT</span></td><td>/api/v1/groups/{id}</td><td>Admin</td><td>Оновлення групи</td></tr>
+                <tr><td><span class="method delete">DELETE</span></td><td>/api/v1/groups/{id}</td><td>Admin</td><td>Видалення групи</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/subjects/</td><td>Public</td><td>Список предметів</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/subjects/{id}</td><td>Public</td><td>Один предмет</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/subjects/</td><td>Admin</td><td>Створення предмета</td></tr>
+                <tr><td><span class="method put">PUT</span></td><td>/api/v1/subjects/{id}</td><td>Admin</td><td>Оновлення предмета</td></tr>
+                <tr><td><span class="method delete">DELETE</span></td><td>/api/v1/subjects/{id}</td><td>Admin</td><td>Видалення предмета</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/teachers/</td><td>Public</td><td>Список викладачів</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/teachers/{id}</td><td>Public</td><td>Один викладач</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/teachers/</td><td>Admin</td><td>Створення викладача</td></tr>
+                <tr><td><span class="method put">PUT</span></td><td>/api/v1/teachers/{id}</td><td>Admin</td><td>Оновлення викладача</td></tr>
+                <tr><td><span class="method delete">DELETE</span></td><td>/api/v1/teachers/{id}</td><td>Admin</td><td>Видалення викладача</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/schedule/</td><td>Public</td><td>Розклад (з фільтрами)</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/schedule/{id}</td><td>Public</td><td>Один запис розкладу</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/schedule/group/{id}</td><td>Public</td><td>Розклад групи</td></tr>
+                <tr><td><span class="method get">GET</span></td><td>/api/v1/schedule/teacher/{id}</td><td>Public</td><td>Розклад викладача</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/schedule/</td><td>Admin</td><td>Створення запису</td></tr>
+                <tr><td><span class="method put">PUT</span></td><td>/api/v1/schedule/{id}</td><td>Admin</td><td>Оновлення запису</td></tr>
+                <tr><td><span class="method delete">DELETE</span></td><td>/api/v1/schedule/{id}</td><td>Admin</td><td>Видалення запису</td></tr>
+                <tr><td><span class="method post">POST</span></td><td>/api/v1/schedule/seed</td><td>Admin</td><td>Генерація тестових даних</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ===== MODAL ===== -->
+  <div id="modal-overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modal-title"></h3>
+        <button class="modal-close" id="modal-close" aria-label="Закрити">&#215;</button>
+      </div>
+      <div id="modal-body" class="modal-body"></div>
+    </div>
+  </div>
+
+  <!-- ===== TOAST ===== -->
+  <div id="toast-container" aria-live="polite"></div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
